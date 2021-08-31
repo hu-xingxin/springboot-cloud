@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>product</title>
+    <th:block th:include="include :: header('product')" />
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col" style="margin-top: 100px">
+                <div id="toolbar">
+                    <button type="button" class="btn btn-outline-primary">添加</button>
+                    <button type="button" class="btn btn-outline-danger">删除</button>
+                </div>
+                <table id="table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        $('#table').bootstrapTable({
+            url : 'product/listFeign',
+            pagination: true,
+            sortable: true,
+            showButtonText: true,
+            showSearchButton: true,
+            showSearchClearButton: true,
+            search: true,
+            showRefresh: true,
+            showToggle: true,
+            showFullscreen: true,
+            showColumns: true,//隐藏的列 不会被导出
+            paginationUseIntermediate: true,
+            virtualScroll: true,
+            paginationLoop: true,
+            toolbar: '#toolbar',
+            pageNumber: 1,
+            pageSize: 5,
+            smartDisplay: false,
+            pageList: [10, 15, 30, 50, 100],
+            clickToSelect: true,
+            showButtonText: true,
+            search: true,
+            showExport:true,//工具栏上显示导出按钮
+            exportTypes: ['xlsx','json'],
+            exportDataType: '1',
+            forceExport: true,
+            showHeader: true,
+            showFooter: true,
+            exportOptions: {//导出参数设置
+                fileName: function () {//导出文件名称
+                    return 'product'
+                },
+                ignoreColumn: [0]//设置不导出的列
+            },
+            columns : [{
+                checkbox: true,
+                visible: true,
+                align: 'center',
+                width: '80px',
+                // footerFormatter:function (value, row, index) {
+                //     return '合计: ';
+                // },
+        },{
+                title : '序号',
+                field : 'id',
+                sortable: true,
+                align: 'center',
+                cellStyle:  function fieldStyle(value, row, index){
+                    return{
+                        // css:{'color': 'red'},
+                        // classes:'my-class'
+                    }
+                }
+            }, {
+                title : '名称',
+                field : 'name',
+                sortable: true,
+                align: 'center',
+            },{
+                title : '价格',
+                field : 'price',
+                sortable: true,
+                align: 'center',
+                footerFormatter: function (value) {
+                    var sum = 0;
+                    for (var i in value) {
+                        sum += parseFloat(value[i].price);
+                    }
+                    return "<span style='color: red;font-weight: bold;'>" + '合计: ' + sum+"</span>";
+                },
+            },{
+                title : '操作',
+                width: '180px',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    var result = "";
+                    result +=  "<button type='button' class='btn btn-outline-primary btn-sm'>添加</button> ";
+                    result +=  "<button type='button' class='btn btn-outline-warning btn-sm'>修改</button> ";
+                    result +=  "<button type='button' class='btn btn-outline-danger btn-sm'>删除</button> ";
+                    return result;
+                },
+            }]
+        });
+    </script>
+</body>
+</html>
